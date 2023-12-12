@@ -5,7 +5,8 @@ from CNNClassifier import logger
 from pathlib import Path
 from tqdm import tqdm # TO show the progress bar for any process
 from CNNClassifier.entity import DataIngestionConfig
-from CNNClassifier.utils import utils
+from CNNClassifier.utils.utils import get_size
+
 
 class DataIngestion:
     def __init__(self, config: DataIngestionConfig):
@@ -20,14 +21,17 @@ class DataIngestion:
                 filename=self.config.local_data_file
             )
             logger.info(f"{filename} download! with following info: \n{headers}")
+
         else:
             logger.info(f"File already exists of size: {get_size(Path(self.config.local_data_file))}")        
 
     def _get_updated_list_of_files(self, list_of_files):
         return [f for f in list_of_files if f.endswith(".jpg") and ("Cat" in f or "Dog" in f)]
 
-    def _preprocess(self, zf: ZipFile, f: str, working_dir: str): # Here in the parameters, f:str means that the varibale f should be a string 
+    def _preprocess(self, zf: ZipFile, f: str, working_dir: str): # Here in the parameters, f:str means that the varibale f should be a string type
+        
         target_filepath = os.path.join(working_dir, f)
+        
         if not os.path.exists(target_filepath):
             zf.extract(f, working_dir)
         
@@ -36,9 +40,12 @@ class DataIngestion:
             os.remove(target_filepath)
 
     def unzip_and_clean(self):
-        logger.info(f"unzipping file and removing unawanted files")
+        
+        logger.info(f"unzipping file and removing unwanted files")
+        
         with ZipFile(file=self.config.local_data_file, mode="r") as zf:
             list_of_files = zf.namelist()
+            
             updated_list_of_files = self._get_updated_list_of_files(list_of_files)
             for f in tqdm(updated_list_of_files):
                 self._preprocess(zf, f, self.config.unzip_dir)

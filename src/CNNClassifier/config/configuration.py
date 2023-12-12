@@ -1,10 +1,10 @@
 from CNNClassifier.constants import CONFIG_FILE_PATH, PARAMS_FILE_PATH
-from CNNClassifier.utils import read_yaml, create_directories
+from CNNClassifier.utils.utils import read_yaml, create_directories
 from CNNClassifier.entity import (
     DataIngestionConfig, 
     PrepareBaseModelConfig, 
     PrepareCallbacksConfig,
-    TrainingConfig,
+    TrainingConfig,           
     EvaluationConfig
 )
 from pathlib import Path
@@ -19,7 +19,7 @@ class ConfigurationManager:
         self.params = read_yaml(params_filepath)
         create_directories([self.config.artifacts_root])
 
-    def get_data_ingestion_config(self) -> DataIngestionConfig:
+    def get_data_ingestion_config(self):
         config = self.config.data_ingestion
         
         create_directories([config.root_dir])
@@ -33,7 +33,7 @@ class ConfigurationManager:
 
         return data_ingestion_config
 
-    def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
+    def get_prepare_base_model_config(self):
         config = self.config.prepare_base_model
         
         create_directories([config.root_dir])

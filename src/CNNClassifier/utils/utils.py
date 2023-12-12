@@ -1,5 +1,5 @@
 import os
-from box.exceptions import BoxValueError
+from boxsdk.exception import BoxValueError
 import yaml
 from CNNClassifier import logger
 import json
